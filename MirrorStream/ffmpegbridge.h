@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 
-extern int harry_test( const int width, const int height, const unsigned char* data, const unsigned int length );
+typedef int(*WRITE_DATA_CALLBACK)( void* self, uint8_t* data, size_t length );
+extern int harry_test( const int width, const int height, const unsigned char* data, const unsigned int length, void* self, WRITE_DATA_CALLBACK callback );
 
 #endif /* ffmpegbridge_h */

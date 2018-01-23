@@ -8,10 +8,17 @@
 
 import Foundation
 
+
 class MirrorStream {
     init() {
     }
+
+    func test( data : UnsafeMutablePointer<UInt8>, length: Int ) -> Int {
+        print("\(data[8])")
+        return length;
+    }
     
+
     func run() {
     
         var count : UInt32 = 0
@@ -37,7 +44,12 @@ class MirrorStream {
         
         let image : CGImage = CGDisplayCreateImage( displayIDS[0] )!
         
-        harry_test( Int32(image.width), Int32(image.height), CFDataGetBytePtr(image.dataProvider?.data)!, UInt32(CFDataGetLength( image.dataProvider?.data )) )
+        harry_test( Int32(image.width), Int32(image.height), CFDataGetBytePtr(image.dataProvider?.data)!, UInt32(CFDataGetLength( image.dataProvider?.data )),
+                    Unmanaged.passUnretained(self).toOpaque(),
+                    { ( rawSELF: UnsafeMutableRawPointer?, data : UnsafeMutablePointer<UInt8>?, length: Int ) -> (Int32) in
+                        let SELF : MirrorStream = Unmanaged.fromOpaque( rawSELF! ).takeUnretainedValue()
+                        return (Int32)(SELF.test( data: data!, length: length ));
+                    } )
         
     }
     

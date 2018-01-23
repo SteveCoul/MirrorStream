@@ -170,7 +170,7 @@ void done() {
     printf("Shutdown\n");
 }
 
-int harry_test( const int width, const int height, const unsigned char* data, const unsigned int length ) {
+int harry_test( const int width, const int height, const unsigned char* data, const unsigned int length, void* self, WRITE_DATA_CALLBACK callback ) {
 
     const uint32_t* source = (const uint32_t*)data;
     
@@ -198,9 +198,11 @@ int harry_test( const int width, const int height, const unsigned char* data, co
     av_frame_free( &frame );
         
         newFrame( NULL );
-        
+    
+    uint8_t testdata[] = { 0, 1, 2, 3, 4, 5, 6, 7 };
     
     done();
     
+    fprintf( stderr, "Got %d\n", callback(self, testdata, 8 ) );
     return 0;
 }
