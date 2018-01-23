@@ -7,6 +7,7 @@
 //
 
 #include <stdint.h>
+#include <sys/time.h>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdocumentation"
@@ -17,6 +18,9 @@
 
 #include "ffmpegbridge.h"
 
+static void*                m_callback_object;
+static WRITE_DATA_CALLBACK  m_callback_function;
+static unsigned long long   m_base_clock;
 AVIOContext*            m_io_context;
 unsigned char*          m_io_context_buffer;
 static const size_t     ENCODER_BUFFER_SIZE = 4096*188;
@@ -30,6 +34,15 @@ int                     m_width;
 int                     m_height;
 AVRational              m_time_base;
 int                     m_quality;
+
+static unsigned long long NOW(void) {
+    struct timeval tv;
+    unsigned long long rc;
+    (void)gettimeofday( &tv, NULL );
+    rc = tv.tv_sec * 1000;
+    rc = rc + ( tv.tv_usec / 1000 );
+    return rc;
+}
 
 static
 void add_stream( enum AVCodecID codec_id) {
@@ -68,8 +81,7 @@ void add_stream( enum AVCodecID codec_id) {
 
 static
 int aviowrite_wrapper(void *opaque, uint8_t *buf, int buf_size ) {
-    fprintf( stderr, "TODO - write data\n");
-    return -1;
+    return m_callback_function( m_callback_object, buf, buf_size );
 }
 
 static
@@ -137,8 +149,6 @@ void newFrame( AVFrame* frame ) {
     AVPacket pkt = { 0 };
     int ret;
     
-    printf("Write frame\n");
-    
     do {
         av_init_packet(&pkt);
         
@@ -156,8 +166,37 @@ void newFrame( AVFrame* frame ) {
     } while ( got_packet && !frame );
 }
 
+int CreateFFMPEGx264( const int width, const int height, void* callback_object, WRITE_DATA_CALLBACK callback_function ) {
+    m_pixel_format = AV_PIX_FMT_YUV420P;
+    m_width = width;
+    m_height = height;
+    m_callback_object = callback_object;
+    m_callback_function = callback_function;
+    m_base_clock = NOW();
+    return init();
+}
 
-void done() {
+int FeedFFMPEGx264( const unsigned char* data, const size_t length ) {
+    const uint32_t* source = (const uint32_t*)data;
+
+    AVFrame* frame = av_frame_alloc();
+    frame->width = m_width;
+    frame->height = m_height;
+    frame->format = m_pixel_format;
+    frame->pts = NOW() - m_base_clock;
+    av_frame_get_buffer( frame, 32 );
+    
+    /* Copy image data and convert from ARGB to YUV */
+    
+    newFrame( frame );
+    
+    av_frame_free( &frame );
+
+    return (int)length;
+}
+
+void DestroyFFMPEGx264( void ) {
+    newFrame( NULL );
     av_write_trailer(m_format_context);
     
     avcodec_free_context(&m_codec_context);
@@ -167,42 +206,5 @@ void done() {
         av_freep( &m_io_context );
     }
     avformat_free_context(m_format_context);
-    printf("Shutdown\n");
 }
 
-int harry_test( const int width, const int height, const unsigned char* data, const unsigned int length, void* self, WRITE_DATA_CALLBACK callback ) {
-
-    const uint32_t* source = (const uint32_t*)data;
-    
-    printf("I'm in C - %d x %d : %p %u\n", width, height, data, length );
-    
-    printf("%08X %08X %08X %08X\n", source[0], source[1], source[2], source[3] );
-    
-    m_pixel_format = AV_PIX_FMT_YUV420P;
-    m_width = width;
-    m_height = height;
-    
-    init();
-   
-    AVFrame* frame = av_frame_alloc();
-    frame->width = m_width;
-    frame->height = m_height;
-    frame->format = m_pixel_format;
-    frame->pts = 0;
-    av_frame_get_buffer( frame, 32 );
-    
-    /* Copy image data and convert from ARGB to YUV */
-    
-    newFrame( frame );
-    
-    av_frame_free( &frame );
-        
-        newFrame( NULL );
-    
-    uint8_t testdata[] = { 0, 1, 2, 3, 4, 5, 6, 7 };
-    
-    done();
-    
-    fprintf( stderr, "Got %d\n", callback(self, testdata, 8 ) );
-    return 0;
-}

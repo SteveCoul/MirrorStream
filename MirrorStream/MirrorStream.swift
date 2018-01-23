@@ -7,14 +7,17 @@
 //
 
 import Foundation
-
+import QuartzCore
 
 class MirrorStream {
+    
+    var file : FileHandle?
+    
     init() {
     }
 
     func test( data : UnsafeMutablePointer<UInt8>, length: Int ) -> Int {
-        print("\(data[8])")
+        file?.write( NSData( bytes: data, length: length ) as Data )
         return length;
     }
     
@@ -41,16 +44,36 @@ class MirrorStream {
             print("Failed to get display list")
             return;
         }
-        
-        let image : CGImage = CGDisplayCreateImage( displayIDS[0] )!
-        
-        harry_test( Int32(image.width), Int32(image.height), CFDataGetBytePtr(image.dataProvider?.data)!, UInt32(CFDataGetLength( image.dataProvider?.data )),
+
+        var image : CGImage = CGDisplayCreateImage( displayIDS[0] )!
+
+        CreateFFMPEGx264( Int32(image.width), Int32(image.height),
                     Unmanaged.passUnretained(self).toOpaque(),
                     { ( rawSELF: UnsafeMutableRawPointer?, data : UnsafeMutablePointer<UInt8>?, length: Int ) -> (Int32) in
                         let SELF : MirrorStream = Unmanaged.fromOpaque( rawSELF! ).takeUnretainedValue()
                         return (Int32)(SELF.test( data: data!, length: length ));
                     } )
+    
+        let url : URL = URL( fileURLWithPath: "output.ts" )
+        let t = Data()
+        if ( FileManager.default.createFile(atPath:  url.path, contents: t, attributes: nil ) == false ) {
+            print("Failed to create file?")
+        }
+        do {
+            try file = FileHandle( forWritingTo: url )
+        } catch let error as NSError {
+            print("File error \(error)")
+        }
         
+        while true {
+            image = CGDisplayCreateImage( displayIDS[0] )!
+//TODO implement rate limiting based on this value            print("\(CACurrentMediaTime())")
+            FeedFFMPEGx264(CFDataGetBytePtr(image.dataProvider?.data)!, Int(CFDataGetLength( image.dataProvider?.data )))
+        }
+    }
+    
+    deinit {
+        DestroyFFMPEGx264()
     }
     
 }
