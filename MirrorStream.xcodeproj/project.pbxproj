@@ -1,0 +1,436 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4A52C17A201775100063EA31 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A52C179201775100063EA31 /* AppDelegate.swift */; };
+		4A52C17C201775100063EA31 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A52C17B201775100063EA31 /* ViewController.swift */; };
+		4A52C17E201775100063EA31 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A52C17D201775100063EA31 /* Assets.xcassets */; };
+		4A52C181201775100063EA31 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A52C17F201775100063EA31 /* Main.storyboard */; };
+		4A52C18A201776D80063EA31 /* MirrorStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A52C189201776D80063EA31 /* MirrorStream.swift */; };
+		4A52C18E2017773B0063EA31 /* ffmpegbridge.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A52C18D2017773B0063EA31 /* ffmpegbridge.c */; };
+		4A52C194201780BA0063EA31 /* include in Resources */ = {isa = PBXBuildFile; fileRef = 4A52C192201780B70063EA31 /* include */; };
+		4A52C195201780BA0063EA31 /* lib in Resources */ = {isa = PBXBuildFile; fileRef = 4A52C193201780BA0063EA31 /* lib */; };
+		4A52C1A9201784380063EA31 /* libavutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A52C19E201783D90063EA31 /* libavutil.a */; };
+		4A52C1AA201784490063EA31 /* libswscale.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A52C19C201783D90063EA31 /* libswscale.a */; };
+		4A52C1AB2017845C0063EA31 /* libswresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A52C19B201783D90063EA31 /* libswresample.a */; };
+		4A52C1AC2017846D0063EA31 /* libpostproc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A52C19D201783D90063EA31 /* libpostproc.a */; };
+		4A52C1AD2017847A0063EA31 /* libx264.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A52C19A201783D90063EA31 /* libx264.a */; };
+		4A52C1AE2017848D0063EA31 /* libavdevice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A52C198201783D90063EA31 /* libavdevice.a */; };
+		4A52C1AF201784A00063EA31 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A52C19F201783D90063EA31 /* libavcodec.a */; };
+		4A52C1B0201784AE0063EA31 /* libavfilter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A52C197201783D90063EA31 /* libavfilter.a */; };
+		4A52C1B1201784BF0063EA31 /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A52C199201783D90063EA31 /* libavformat.a */; };
+		4A52C1B3201784E80063EA31 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A52C1B2201784E80063EA31 /* libz.tbd */; };
+		4A52C1B5201785020063EA31 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A52C1B4201785020063EA31 /* libbz2.tbd */; };
+		4A52C1B7201785120063EA31 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A52C1B6201785120063EA31 /* libiconv.tbd */; };
+		4A52C1B92017854C0063EA31 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A52C1B82017854C0063EA31 /* AudioToolbox.framework */; };
+		4A52C1BC201785640063EA31 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A52C1BA201785640063EA31 /* CoreFoundation.framework */; };
+		4A52C1BD201785640063EA31 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A52C1BB201785640063EA31 /* CoreServices.framework */; };
+		4A52C1BF201785900063EA31 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A52C1BE201785900063EA31 /* CoreMedia.framework */; };
+		4A52C1C1201785B30063EA31 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A52C1C0201785B30063EA31 /* VideoToolbox.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		4A52C176201775100063EA31 /* MirrorStream.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MirrorStream.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A52C179201775100063EA31 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		4A52C17B201775100063EA31 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		4A52C17D201775100063EA31 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4A52C180201775100063EA31 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		4A52C182201775100063EA31 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4A52C183201775100063EA31 /* MirrorStream.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MirrorStream.entitlements; sourceTree = "<group>"; };
+		4A52C189201776D80063EA31 /* MirrorStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorStream.swift; sourceTree = "<group>"; };
+		4A52C18B2017773A0063EA31 /* MirrorStream-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MirrorStream-Bridging-Header.h"; sourceTree = "<group>"; };
+		4A52C18C2017773B0063EA31 /* ffmpegbridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ffmpegbridge.h; sourceTree = "<group>"; };
+		4A52C18D2017773B0063EA31 /* ffmpegbridge.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ffmpegbridge.c; sourceTree = "<group>"; };
+		4A52C192201780B70063EA31 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; path = include; sourceTree = "<group>"; };
+		4A52C193201780BA0063EA31 /* lib */ = {isa = PBXFileReference; lastKnownFileType = folder; path = lib; sourceTree = "<group>"; };
+		4A52C197201783D90063EA31 /* libavfilter.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavfilter.a; path = MirrorStream/Externals/lib/libavfilter.a; sourceTree = "<group>"; };
+		4A52C198201783D90063EA31 /* libavdevice.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavdevice.a; path = MirrorStream/Externals/lib/libavdevice.a; sourceTree = "<group>"; };
+		4A52C199201783D90063EA31 /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavformat.a; path = MirrorStream/Externals/lib/libavformat.a; sourceTree = "<group>"; };
+		4A52C19A201783D90063EA31 /* libx264.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libx264.a; path = MirrorStream/Externals/lib/libx264.a; sourceTree = "<group>"; };
+		4A52C19B201783D90063EA31 /* libswresample.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswresample.a; path = MirrorStream/Externals/lib/libswresample.a; sourceTree = "<group>"; };
+		4A52C19C201783D90063EA31 /* libswscale.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswscale.a; path = MirrorStream/Externals/lib/libswscale.a; sourceTree = "<group>"; };
+		4A52C19D201783D90063EA31 /* libpostproc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpostproc.a; path = MirrorStream/Externals/lib/libpostproc.a; sourceTree = "<group>"; };
+		4A52C19E201783D90063EA31 /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavutil.a; path = MirrorStream/Externals/lib/libavutil.a; sourceTree = "<group>"; };
+		4A52C19F201783D90063EA31 /* libavcodec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavcodec.a; path = MirrorStream/Externals/lib/libavcodec.a; sourceTree = "<group>"; };
+		4A52C1B2201784E80063EA31 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		4A52C1B4201785020063EA31 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
+		4A52C1B6201785120063EA31 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
+		4A52C1B82017854C0063EA31 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		4A52C1BA201785640063EA31 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		4A52C1BB201785640063EA31 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		4A52C1BE201785900063EA31 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		4A52C1C0201785B30063EA31 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4A52C173201775100063EA31 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A52C1C1201785B30063EA31 /* VideoToolbox.framework in Frameworks */,
+				4A52C1BF201785900063EA31 /* CoreMedia.framework in Frameworks */,
+				4A52C1BC201785640063EA31 /* CoreFoundation.framework in Frameworks */,
+				4A52C1BD201785640063EA31 /* CoreServices.framework in Frameworks */,
+				4A52C1B92017854C0063EA31 /* AudioToolbox.framework in Frameworks */,
+				4A52C1B7201785120063EA31 /* libiconv.tbd in Frameworks */,
+				4A52C1B5201785020063EA31 /* libbz2.tbd in Frameworks */,
+				4A52C1B3201784E80063EA31 /* libz.tbd in Frameworks */,
+				4A52C1B1201784BF0063EA31 /* libavformat.a in Frameworks */,
+				4A52C1B0201784AE0063EA31 /* libavfilter.a in Frameworks */,
+				4A52C1AF201784A00063EA31 /* libavcodec.a in Frameworks */,
+				4A52C1AE2017848D0063EA31 /* libavdevice.a in Frameworks */,
+				4A52C1AD2017847A0063EA31 /* libx264.a in Frameworks */,
+				4A52C1AC2017846D0063EA31 /* libpostproc.a in Frameworks */,
+				4A52C1AB2017845C0063EA31 /* libswresample.a in Frameworks */,
+				4A52C1AA201784490063EA31 /* libswscale.a in Frameworks */,
+				4A52C1A9201784380063EA31 /* libavutil.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4A52C16D201775100063EA31 = {
+			isa = PBXGroup;
+			children = (
+				4A52C178201775100063EA31 /* MirrorStream */,
+				4A52C177201775100063EA31 /* Products */,
+				4A52C196201783D90063EA31 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		4A52C177201775100063EA31 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4A52C176201775100063EA31 /* MirrorStream.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4A52C178201775100063EA31 /* MirrorStream */ = {
+			isa = PBXGroup;
+			children = (
+				4A52C18F201780410063EA31 /* Externals */,
+				4A52C179201775100063EA31 /* AppDelegate.swift */,
+				4A52C17B201775100063EA31 /* ViewController.swift */,
+				4A52C17D201775100063EA31 /* Assets.xcassets */,
+				4A52C17F201775100063EA31 /* Main.storyboard */,
+				4A52C182201775100063EA31 /* Info.plist */,
+				4A52C183201775100063EA31 /* MirrorStream.entitlements */,
+				4A52C189201776D80063EA31 /* MirrorStream.swift */,
+				4A52C18C2017773B0063EA31 /* ffmpegbridge.h */,
+				4A52C18D2017773B0063EA31 /* ffmpegbridge.c */,
+				4A52C18B2017773A0063EA31 /* MirrorStream-Bridging-Header.h */,
+			);
+			path = MirrorStream;
+			sourceTree = "<group>";
+		};
+		4A52C18F201780410063EA31 /* Externals */ = {
+			isa = PBXGroup;
+			children = (
+				4A52C192201780B70063EA31 /* include */,
+				4A52C193201780BA0063EA31 /* lib */,
+			);
+			path = Externals;
+			sourceTree = "<group>";
+		};
+		4A52C196201783D90063EA31 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4A52C1C0201785B30063EA31 /* VideoToolbox.framework */,
+				4A52C1BE201785900063EA31 /* CoreMedia.framework */,
+				4A52C1BA201785640063EA31 /* CoreFoundation.framework */,
+				4A52C1BB201785640063EA31 /* CoreServices.framework */,
+				4A52C1B82017854C0063EA31 /* AudioToolbox.framework */,
+				4A52C1B6201785120063EA31 /* libiconv.tbd */,
+				4A52C1B4201785020063EA31 /* libbz2.tbd */,
+				4A52C1B2201784E80063EA31 /* libz.tbd */,
+				4A52C19F201783D90063EA31 /* libavcodec.a */,
+				4A52C198201783D90063EA31 /* libavdevice.a */,
+				4A52C197201783D90063EA31 /* libavfilter.a */,
+				4A52C199201783D90063EA31 /* libavformat.a */,
+				4A52C19E201783D90063EA31 /* libavutil.a */,
+				4A52C19D201783D90063EA31 /* libpostproc.a */,
+				4A52C19B201783D90063EA31 /* libswresample.a */,
+				4A52C19C201783D90063EA31 /* libswscale.a */,
+				4A52C19A201783D90063EA31 /* libx264.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4A52C175201775100063EA31 /* MirrorStream */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4A52C186201775100063EA31 /* Build configuration list for PBXNativeTarget "MirrorStream" */;
+			buildPhases = (
+				4A52C172201775100063EA31 /* Sources */,
+				4A52C173201775100063EA31 /* Frameworks */,
+				4A52C174201775100063EA31 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MirrorStream;
+			productName = MirrorStream;
+			productReference = 4A52C176201775100063EA31 /* MirrorStream.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4A52C16E201775100063EA31 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0920;
+				LastUpgradeCheck = 0920;
+				ORGANIZATIONNAME = Harry;
+				TargetAttributes = {
+					4A52C175201775100063EA31 = {
+						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 0920;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 4A52C171201775100063EA31 /* Build configuration list for PBXProject "MirrorStream" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 4A52C16D201775100063EA31;
+			productRefGroup = 4A52C177201775100063EA31 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4A52C175201775100063EA31 /* MirrorStream */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4A52C174201775100063EA31 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A52C194201780BA0063EA31 /* include in Resources */,
+				4A52C17E201775100063EA31 /* Assets.xcassets in Resources */,
+				4A52C195201780BA0063EA31 /* lib in Resources */,
+				4A52C181201775100063EA31 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4A52C172201775100063EA31 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A52C18A201776D80063EA31 /* MirrorStream.swift in Sources */,
+				4A52C18E2017773B0063EA31 /* ffmpegbridge.c in Sources */,
+				4A52C17C201775100063EA31 /* ViewController.swift in Sources */,
+				4A52C17A201775100063EA31 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		4A52C17F201775100063EA31 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4A52C180201775100063EA31 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		4A52C184201775100063EA31 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		4A52C185201775100063EA31 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+			};
+			name = Release;
+		};
+		4A52C187201775100063EA31 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = MirrorStream/MirrorStream.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				HEADER_SEARCH_PATHS = $SRCROOT/MirrorStream/Externals/include;
+				INFOPLIST_FILE = MirrorStream/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/MirrorStream/Externals/lib",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = Harry.MirrorStream;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "MirrorStream/MirrorStream-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		4A52C188201775100063EA31 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = MirrorStream/MirrorStream.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				HEADER_SEARCH_PATHS = $SRCROOT/MirrorStream/Externals/include;
+				INFOPLIST_FILE = MirrorStream/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/MirrorStream/Externals/lib",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = Harry.MirrorStream;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "MirrorStream/MirrorStream-Bridging-Header.h";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4A52C171201775100063EA31 /* Build configuration list for PBXProject "MirrorStream" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A52C184201775100063EA31 /* Debug */,
+				4A52C185201775100063EA31 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4A52C186201775100063EA31 /* Build configuration list for PBXNativeTarget "MirrorStream" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A52C187201775100063EA31 /* Debug */,
+				4A52C188201775100063EA31 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4A52C16E201775100063EA31 /* Project object */;
+}
