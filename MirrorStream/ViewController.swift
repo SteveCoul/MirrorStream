@@ -10,14 +10,18 @@ import Cocoa
 
 class ViewController: NSViewController {
 
-    @objc func thread() {
-        let fred = MirrorStream()
-        fred.run()
+    let ms = MirrorStream()
+    
+    @IBAction func buttonclick(_ sender: NSButton) {
+        if ( ms.isrunning() ) {
+            ms.stop();
+        } else {
+            ms.start();
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        Thread( target: self, selector: #selector(ViewController.thread), object: nil ).start()
     }
 
     override var representedObject: Any? {
@@ -25,6 +29,7 @@ class ViewController: NSViewController {
         // Update the view, if already loaded.
         }
     }
+    
 
 
 }

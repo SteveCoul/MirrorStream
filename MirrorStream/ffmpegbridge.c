@@ -113,7 +113,6 @@ int init( void ) {
                 m_format_context->pb = m_io_context;
                 m_output_format = m_format_context->oformat;
                 m_output_format->video_codec = AV_CODEC_ID_H264;
-                //m_output_format->video_codec = AV_CODEC_ID_MPEG4;
                 
                 add_stream( m_output_format->video_codec);
                 
@@ -183,10 +182,30 @@ int FeedFFMPEGx264( const unsigned char* data, const size_t length ) {
     frame->width = m_width;
     frame->height = m_height;
     frame->format = m_pixel_format;
-    frame->pts = NOW() - m_base_clock;
+    frame->pts = ( NOW() - m_base_clock ) * 90;
+    
     av_frame_get_buffer( frame, 32 );
     
     /* Copy image data and convert from ARGB to YUV */
+    int x, y;
+    for ( y = 0; y < m_height; y++ ) {
+        for ( x = 0; x < m_width; x++ ) {
+            uint32_t argb = source[ y*m_width + x ];
+            
+            int R = ( argb >> 16 ) & 255;
+            int G = ( argb >> 8 ) & 255;
+            int B = ( argb ) & 255;
+            
+            double Y = R *  .299000 + G *  .587000 + B *  .114000;
+            double U = R * -.168736 + G * -.331264 + B *  .500000 + 128;
+            double V = R *  .500000 + G * -.418688 + B * -.081312 + 128;
+
+            (frame->data[0])[ (y/1)*frame->linesize[0] + x ] = (uint8_t)Y;
+            (frame->data[1])[ (y/2)*frame->linesize[1] + ( x/2 ) ] = (uint8_t)U;
+            (frame->data[2])[ (y/2)*frame->linesize[2] + ( x/2 ) ] = (uint8_t)V;
+            
+        }
+    }
     
     newFrame( frame );
     

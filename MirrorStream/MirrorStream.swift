@@ -12,17 +12,40 @@ import QuartzCore
 class MirrorStream {
     
     var file : FileHandle?
+    var running : Bool
+    var has_stopped : Bool;
     
     init() {
+        running = false
+        has_stopped = false
     }
 
+    func isrunning() -> Bool {
+        return running
+    }
+    
+    func start() {
+        stop()
+        Thread( target: self, selector: #selector(MirrorStream.run), object: nil ).start()
+        print("Started")
+    }
+    
+    func stop() {
+        if ( running ) {
+            print("Stopping")
+            has_stopped = false;
+            running = false;
+            while ( has_stopped == false ) { };
+            print("Stopped")
+        }
+    }
+    
     func test( data : UnsafeMutablePointer<UInt8>, length: Int ) -> Int {
         file?.write( NSData( bytes: data, length: length ) as Data )
         return length;
     }
     
-
-    func run() {
+    @objc func run() {
     
         var count : UInt32 = 0
         CGGetActiveDisplayList( 0, nil, &count )
@@ -45,6 +68,9 @@ class MirrorStream {
             return;
         }
 
+        running = true
+        
+        
         var image : CGImage = CGDisplayCreateImage( displayIDS[0] )!
 
         CreateFFMPEGx264( Int32(image.width), Int32(image.height),
@@ -65,11 +91,11 @@ class MirrorStream {
             print("File error \(error)")
         }
         
-        while true {
+        while running {
             image = CGDisplayCreateImage( displayIDS[0] )!
-//TODO implement rate limiting based on this value            print("\(CACurrentMediaTime())")
             FeedFFMPEGx264(CFDataGetBytePtr(image.dataProvider?.data)!, Int(CFDataGetLength( image.dataProvider?.data )))
         }
+        has_stopped = true
     }
     
     deinit {
