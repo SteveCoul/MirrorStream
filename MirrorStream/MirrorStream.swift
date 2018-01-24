@@ -93,6 +93,9 @@ class MirrorStream {
         
         while running {
             image = CGDisplayCreateImage( displayIDS[0] )!
+            
+            // TODO - create a context. render this image to it, render a mouse pointer to it, use makeImage() to get an image back that has the cursor on it!
+            
             FeedFFMPEGx264(CFDataGetBytePtr(image.dataProvider?.data)!, Int(CFDataGetLength( image.dataProvider?.data )))
         }
         has_stopped = true
