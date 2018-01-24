@@ -9,30 +9,7 @@
 import Foundation
 
 class Output {
-/*
-    var file : FileHandle?
-    
-    init() {
-        let url : URL = URL( fileURLWithPath: "output.ts" )
-        let t = Data()
-        if ( FileManager.default.createFile(atPath:  url.path, contents: t, attributes: nil ) == false ) {
-            print("Failed to create file?")
-        }
-        do {
-            try file = FileHandle( forWritingTo: url )
-        } catch let error as NSError {
-            print("File error \(error)")
-        }
-    }
-    
-    deinit {
-    }
 
-    func write( data: Data ) -> Int {
-        file!.write( data )
-        return data.count;
-    }
- */
     init() {
         StartSocketHack( 32088 );
     }
