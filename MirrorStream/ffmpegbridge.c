@@ -19,6 +19,8 @@
 
 #include "ffmpegbridge.h"
 
+#define SCALE 1
+
 static void*                m_callback_object;
 static WRITE_DATA_CALLBACK  m_callback_function;
 static unsigned long long   m_base_clock;
@@ -35,6 +37,8 @@ int                     m_width;
 int                     m_height;
 AVRational              m_time_base;
 int                     m_quality;
+static int m_source_width;
+static int m_source_height;
 
 static unsigned long long NOW(void) {
     struct timeval tv;
@@ -72,14 +76,9 @@ void add_stream( enum AVCodecID codec_id) {
     m_codec_context->height   = m_height;
     m_stream->time_base = m_time_base;
     m_codec_context->time_base       = (AVRational){1001, 30000};   /// \todo get the proper framerate/timing from source video and pass it into encoder
-    m_codec_context->gop_size      = 99999;
     m_codec_context->pix_fmt       = m_pixel_format;
-    
     av_opt_set( m_codec_context->priv_data, "tune", "zerolatency", 0);
-    
-    /* Some formats want stream headers to be separate. */
-    if (m_format_context->oformat->flags & AVFMT_GLOBALHEADER)
-        m_codec_context->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+    av_opt_set( m_codec_context->priv_data, "x264opts", "repeat-headers=1", 1);
 }
 
 static
@@ -170,8 +169,10 @@ void newFrame( AVFrame* frame ) {
 
 int CreateFFMPEGx264( const int width, const int height, void* callback_object, WRITE_DATA_CALLBACK callback_function ) {
     m_pixel_format = AV_PIX_FMT_YUV420P;
-    m_width = width;
-    m_height = height;
+    m_source_width = width;
+    m_source_height = height;
+    m_width = width/SCALE;
+    m_height = height/SCALE;
     m_callback_object = callback_object;
     m_callback_function = callback_function;
     m_base_clock = NOW();
@@ -193,7 +194,10 @@ int FeedFFMPEGx264( const unsigned char* data, const size_t length ) {
     int x, y;
     for ( y = 0; y < m_height; y++ ) {
         for ( x = 0; x < m_width; x++ ) {
-            uint32_t argb = source[ y*m_width + x ];
+            int px = x * m_source_width / m_width;
+            int py = y * m_source_height / m_height;
+            
+            uint32_t argb = source[ py*m_source_width + px ];
             
             int R = ( argb >> 16 ) & 255;
             int G = ( argb >> 8 ) & 255;

@@ -9,7 +9,7 @@
 import Foundation
 
 class Output {
-    
+/*
     var file : FileHandle?
     
     init() {
@@ -31,5 +31,19 @@ class Output {
     func write( data: Data ) -> Int {
         file!.write( data )
         return data.count;
+    }
+ */
+    init() {
+        StartSocketHack( 32088 );
+    }
+    
+    func write( data: Data ) -> Int {
+        var rc : Int = -1
+        data.withUnsafeBytes({ (u8Ptr: UnsafePointer<UInt8>) in
+            if ( WriteSocketHack( u8Ptr, data.count ) ) {
+                rc = data.count
+            }
+        })
+        return rc
     }
 }
