@@ -13,6 +13,7 @@
 #pragma clang diagnostic ignored "-Wdocumentation"
 
 #include "libavformat/avformat.h"
+#include "libavutil/opt.h"
 
 #pragma clang diagnostic pop
 
@@ -73,6 +74,8 @@ void add_stream( enum AVCodecID codec_id) {
     m_codec_context->time_base       = (AVRational){1001, 30000};   /// \todo get the proper framerate/timing from source video and pass it into encoder
     m_codec_context->gop_size      = 99999;
     m_codec_context->pix_fmt       = m_pixel_format;
+    
+    av_opt_set( m_codec_context->priv_data, "tune", "zerolatency", 0);
     
     /* Some formats want stream headers to be separate. */
     if (m_format_context->oformat->flags & AVFMT_GLOBALHEADER)
