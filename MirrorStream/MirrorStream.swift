@@ -6,18 +6,25 @@
 //  Copyright © 2018 Harry. All rights reserved.
 //
 
+
+// How to move the cursor (later)
+//      CGDisplayMoveCursorToPoint( displayIDS[0], CGPoint( x: 0, y: 0 ) )
+
+// TODO maybe use CGDisplayStream instead? It can do the YUV conversion for me I believe?
+
 import Foundation
 import QuartzCore
 
 class MirrorStream {
     
-    var file : FileHandle?
+    var output : Output?
     var running : Bool
     var has_stopped : Bool;
     
     init() {
         running = false
         has_stopped = false
+        output = Output()
     }
 
     func isrunning() -> Bool {
@@ -38,11 +45,6 @@ class MirrorStream {
             while ( has_stopped == false ) { };
             print("Stopped")
         }
-    }
-    
-    func test( data : UnsafeMutablePointer<UInt8>, length: Int ) -> Int {
-        file?.write( NSData( bytes: data, length: length ) as Data )
-        return length;
     }
     
     @objc func run() {
@@ -77,19 +79,9 @@ class MirrorStream {
                     Unmanaged.passUnretained(self).toOpaque(),
                     { ( rawSELF: UnsafeMutableRawPointer?, data : UnsafeMutablePointer<UInt8>?, length: Int ) -> (Int32) in
                         let SELF : MirrorStream = Unmanaged.fromOpaque( rawSELF! ).takeUnretainedValue()
-                        return (Int32)(SELF.test( data: data!, length: length ));
+                        let output : Data = NSData( bytes: data, length: length ) as Data
+                        return (Int32)(SELF.output!.write( data: output ))
                     } )
-    
-        let url : URL = URL( fileURLWithPath: "output.ts" )
-        let t = Data()
-        if ( FileManager.default.createFile(atPath:  url.path, contents: t, attributes: nil ) == false ) {
-            print("Failed to create file?")
-        }
-        do {
-            try file = FileHandle( forWritingTo: url )
-        } catch let error as NSError {
-            print("File error \(error)")
-        }
         
         while running {
             image = CGDisplayCreateImage( displayIDS[0] )!

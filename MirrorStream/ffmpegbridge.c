@@ -154,7 +154,7 @@ void newFrame( AVFrame* frame ) {
     do {
         av_init_packet(&pkt);
         
-        ret = avcodec_encode_video2(m_codec_context, &pkt, frame, &got_packet);
+        ret = avcodec_encode_video2(m_codec_context, &pkt, frame, &got_packet); 
         if (ret < 0) {
             fprintf( stderr, "Error encoding video frame\n" );
             return;
