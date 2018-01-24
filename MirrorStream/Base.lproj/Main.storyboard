@@ -11,8 +11,49 @@
                 <application id="hnw-xV-0zn" sceneMemberID="viewController">
                     <menu key="mainMenu" title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
                         <items>
-                            <menuItem title="MirrorStream" id="1Xt-HY-uBw">
+                            <menuItem title="Application" id="tMs-GK-3F8">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Application" id="KyC-Bj-Qrg">
+                                    <items>
+                                        <menuItem title="About Application" id="Cw9-vh-lTZ">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="orderFrontStandardAboutPanel:" target="Ady-hI-5gd" id="KdL-3p-EBk"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="A1g-MJ-DdK"/>
+                                        <menuItem title="Preferences…" keyEquivalent="," id="wHN-PI-1jj"/>
+                                        <menuItem isSeparatorItem="YES" id="ccn-cN-ERv"/>
+                                        <menuItem title="Services" id="TDa-i7-9RZ">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Services" systemMenu="services" id="Mie-VT-sPz"/>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="63O-Xc-QVE"/>
+                                        <menuItem title="Hide Application" keyEquivalent="h" id="8jG-6Z-cDe">
+                                            <connections>
+                                                <action selector="hide:" target="Ady-hI-5gd" id="oLr-QA-23J"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Hide Others" keyEquivalent="h" id="a6e-Oe-RgO">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="hideOtherApplications:" target="Ady-hI-5gd" id="c4k-zh-H5B"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Show All" id="zfl-6Q-fDG">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="unhideAllApplications:" target="Ady-hI-5gd" id="iCU-Z6-w5P"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="9la-19-cBO"/>
+                                        <menuItem title="Quit Application" keyEquivalent="q" id="Kj5-cI-Tkp">
+                                            <connections>
+                                                <action selector="terminate:" target="Ady-hI-5gd" id="qbi-gu-YWc"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
                             </menuItem>
                         </items>
                     </menu>
@@ -68,6 +109,9 @@
                             </button>
                         </subviews>
                     </view>
+                    <connections>
+                        <outlet property="button" destination="fhJ-M9-FKv" id="bFC-Bs-Dm4"/>
+                    </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
