@@ -14,13 +14,17 @@
 
 #include "libavformat/avformat.h"
 #include "libavutil/opt.h"
+#include "libavutil/imgutils.h"
+#include "libavutil/parseutils.h"
+#include "libswscale/swscale.h"
 
 #pragma clang diagnostic pop
 
 #include "ffmpegbridge.h"
 
-#define SCALE 1
+#define SCALE 2
 
+struct SwsContext *sws_ctx;
 static void*                m_callback_object;
 static WRITE_DATA_CALLBACK  m_callback_function;
 static unsigned long long   m_base_clock;
@@ -77,8 +81,9 @@ void add_stream( enum AVCodecID codec_id) {
     m_stream->time_base = m_time_base;
     m_codec_context->time_base       = (AVRational){1001, 30000};   /// \todo get the proper framerate/timing from source video and pass it into encoder
     m_codec_context->pix_fmt       = m_pixel_format;
+    m_codec_context->gop_size = 10;
     av_opt_set( m_codec_context->priv_data, "tune", "zerolatency", 0);
-    av_opt_set( m_codec_context->priv_data, "x264opts", "repeat-headers=1", 1);
+    av_opt_set( m_codec_context->priv_data, "x264opts", "repeat-headers=1", 1); // x264 outputs SPS/PSS on each IFrame
 }
 
 static
@@ -135,7 +140,16 @@ int init( void ) {
                             ret = -1;
                         } else {
                             printf("I think I have a video encoder!\n");
-                            ret = 0;
+                            
+                            sws_ctx = sws_getContext(m_source_width, m_source_height, AV_PIX_FMT_0RGB32,
+                                                     m_width, m_height, m_pixel_format,
+                                                     SWS_BILINEAR, NULL, NULL, NULL);
+                            if (!sws_ctx) {
+                                fprintf( stderr, "Failed to get scaling context\n" );
+                                ret = -1;
+                            } else {
+                                ret = 0;
+                            }
                         }
                     }
                 }
@@ -180,8 +194,7 @@ int CreateFFMPEGx264( const int width, const int height, void* callback_object, 
 }
 
 int FeedFFMPEGx264( const unsigned char* data, const size_t length ) {
-    const uint32_t* source = (const uint32_t*)data;
-
+  
     AVFrame* frame = av_frame_alloc();
     frame->width = m_width;
     frame->height = m_height;
@@ -190,29 +203,12 @@ int FeedFFMPEGx264( const unsigned char* data, const size_t length ) {
     
     av_frame_get_buffer( frame, 32 );
     
-    /* Copy image data and convert from ARGB to YUV */
-    int x, y;
-    for ( y = 0; y < m_height; y++ ) {
-        for ( x = 0; x < m_width; x++ ) {
-            int px = x * m_source_width / m_width;
-            int py = y * m_source_height / m_height;
-            
-            uint32_t argb = source[ py*m_source_width + px ];
-            
-            int R = ( argb >> 16 ) & 255;
-            int G = ( argb >> 8 ) & 255;
-            int B = ( argb ) & 255;
-            
-            double Y = R *  .299000 + G *  .587000 + B *  .114000;
-            double U = R * -.168736 + G * -.331264 + B *  .500000 + 128;
-            double V = R *  .500000 + G * -.418688 + B * -.081312 + 128;
-
-            (frame->data[0])[ (y/1)*frame->linesize[0] + x ] = (uint8_t)Y;
-            (frame->data[1])[ (y/2)*frame->linesize[1] + ( x/2 ) ] = (uint8_t)U;
-            (frame->data[2])[ (y/2)*frame->linesize[2] + ( x/2 ) ] = (uint8_t)V;
-            
-        }
-    }
+    const uint8_t* source[1];
+    source[0] = (const uint8_t*)data;
+    int source_linesize[1];
+    source_linesize[0] = m_source_width * 4;
+    
+    sws_scale(sws_ctx, source, source_linesize, 0, m_source_height, frame->data, frame->linesize );
     
     newFrame( frame );
     
@@ -232,5 +228,6 @@ void DestroyFFMPEGx264( void ) {
         av_freep( &m_io_context );
     }
     avformat_free_context(m_format_context);
+    sws_freeContext(sws_ctx);
 }
 
