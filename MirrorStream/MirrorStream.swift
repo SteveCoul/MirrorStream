@@ -76,6 +76,7 @@ class MirrorStream {
         var image : CGImage = CGDisplayCreateImage( displayIDS[0] )!
 
         CreateFFMPEGx264( Int32(image.width), Int32(image.height),
+                          Int32(image.width), Int32(image.height),
                     Unmanaged.passUnretained(self).toOpaque(),
                     { ( rawSELF: UnsafeMutableRawPointer?, data : UnsafeMutablePointer<UInt8>?, length: Int ) -> (Int32) in
                         let SELF : MirrorStream = Unmanaged.fromOpaque( rawSELF! ).takeUnretainedValue()

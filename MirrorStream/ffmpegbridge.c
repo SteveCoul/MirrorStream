@@ -22,8 +22,6 @@
 
 #include "ffmpegbridge.h"
 
-#define SCALE 2
-
 struct SwsContext *sws_ctx;
 static void*                m_callback_object;
 static WRITE_DATA_CALLBACK  m_callback_function;
@@ -181,12 +179,12 @@ void newFrame( AVFrame* frame ) {
     } while ( got_packet && !frame );
 }
 
-int CreateFFMPEGx264( const int width, const int height, void* callback_object, WRITE_DATA_CALLBACK callback_function ) {
+int CreateFFMPEGx264( const int width, const int height, const int video_width, const int video_height, void* callback_object, WRITE_DATA_CALLBACK callback_function ) {
     m_pixel_format = AV_PIX_FMT_YUV420P;
     m_source_width = width;
     m_source_height = height;
-    m_width = width/SCALE;
-    m_height = height/SCALE;
+    m_width = video_width;
+    m_height = video_height;
     m_callback_object = callback_object;
     m_callback_function = callback_function;
     m_base_clock = NOW();
