@@ -12,6 +12,9 @@
 #include <unistd.h>
 #include "SocketHack.h"
 
+// Does not exist on Mac :-(
+#define MSG_NOSIGNAL 0
+
 static int server_fd = -1;
 static int clients[ 1024 ];
 
@@ -70,6 +73,9 @@ bool WriteSocketHack( const void* ptr, size_t len ) {
                 // TODO read/drain incoming http request.
                 const char* resp = "HTTP/1.0 200 Okay\r\n\r\n";
                 (void)write( clients[i], resp, strlen(resp) );
+                
+                int flag = 1; (void)setsockopt(cfd, SOL_SOCKET, SO_NOSIGPIPE, &flag, sizeof(flag) );  // because we don't have MSG_NOSIGNAL
+
                 break;
             }
         }
@@ -79,9 +85,21 @@ bool WriteSocketHack( const void* ptr, size_t len ) {
     }
     for ( i = 0; i < sizeof(clients)/sizeof(clients[0]); i++ ) {
         if ( clients[i] != -1 ) {
-            (void)write( clients[i], ptr, len );
+            if ( send( clients[i], ptr, len, MSG_NOSIGNAL ) < 0 ) {
+                if ( errno == EPIPE ) {
+                    fprintf( stderr, "client %d gone\n", clients[i] );
+                    (void)close( clients[i] );
+                    clients[i] = -1;
+                } else {
+                    fprintf( stderr, "socket error : %s : we've lost some data for now\n", strerror(errno) );
+                }
+            }
         }
     }
             
     return true;
 }
+
+
+
+
