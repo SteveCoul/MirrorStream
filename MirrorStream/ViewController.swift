@@ -18,7 +18,7 @@ class ViewController: NSViewController {
             ms.stop();
             button.title = "Start"
         } else {
-            ms.start();
+            ms.start( width: 0, height: 0 )
             button.title = "Stop"
         }
     }
