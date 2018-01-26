@@ -23,4 +23,8 @@ class Output {
         })
         return rc
     }
+    
+    func bitrate() -> Int {
+        return 0
+    }
 }

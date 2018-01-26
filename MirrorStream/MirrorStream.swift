@@ -12,11 +12,22 @@
 
 // TODO maybe use CGDisplayStream instead? It can do the YUV conversion for me I believe?
 
+/*
+
+fix the EGAIN thing in the _SC_RAW_SOCKETS
+
+why the long startup time in ffplay?
+
+
+*/
+
 import Foundation
 import QuartzCore
 
 class MirrorStream {
     
+    var counter : Int = 0
+    var status_callback : ((String)->Void )?
     var output : Output?
     var running : Bool
     var has_stopped : Bool;
@@ -35,16 +46,20 @@ class MirrorStream {
         return running
     }
     
-    func start( width: Int, height: Int ) {
+    func start( width: Int, height: Int, status_callback: @escaping ( String ) -> Void ) {
         m_width = width
         m_height = height
+        self.status_callback = status_callback
         stop()
+        status_callback( "starting" )
         Thread( target: self, selector: #selector(MirrorStream.run), object: nil ).start()
-        print("Started")
+    }
+    
+    func dummy( text: String ) {
     }
     
     func start() {
-        start( width: 0, height: 0 )
+        start( width: 0, height: 0, status_callback: dummy )
     }
     
     func stop() {
@@ -61,10 +76,9 @@ class MirrorStream {
     
         var count : UInt32 = 0
         CGGetActiveDisplayList( 0, nil, &count )
-        print("There are \(count) display(s)")
         
         if ( count == 0 ) {
-            print("No displays - forget it")
+            status_callback!("No displays - forget it")
             return
         }
         
@@ -76,7 +90,7 @@ class MirrorStream {
         let displayIDS = UnsafeMutablePointer<CGDirectDisplayID>.allocate( capacity: _displayID )
         
         if ( CGGetActiveDisplayList(count, displayIDS, &count ) != CGError.success ) {
-            print("Failed to get display list")
+            status_callback!("Failed to get display list")
             return;
         }
 
@@ -108,8 +122,16 @@ class MirrorStream {
                     { ( rawSELF: UnsafeMutableRawPointer?, data : UnsafeMutablePointer<UInt8>?, length: Int ) -> (Int32) in
                         let SELF : MirrorStream = Unmanaged.fromOpaque( rawSELF! ).takeUnretainedValue()
                         let output : Data = NSData( bytes: data, length: length ) as Data
+                        SELF.counter = SELF.counter + 1
+                        if ( SELF.counter == 50 ) {
+                            SELF.counter = 0
+                            let rate : Int = (SELF.output?.bitrate())!
+                            SELF.status_callback!( "Mirroring, " + String(describing:rate) + " bps" )
+                        }
                         return (Int32)(SELF.output!.write( data: output ))
                     } )
+        
+        status_callback!("Mirroring")
         
         while running {
             image = CGDisplayCreateImage( displayIDS[0] )!

@@ -22,6 +22,13 @@ class ViewController: NSViewController {
     
     @IBAction func onModeSelectChange(_ sender: Any) {
     }
+    
+    func statusUpdate( text: String ) {
+        DispatchQueue.main.async(execute: {
+            self.status.stringValue = text
+        })
+    }
+    
     @IBAction func buttonclick(_ sender: NSButton) {
         if ( ms.isrunning() ) {
             ms.stop();
@@ -37,7 +44,7 @@ class ViewController: NSViewController {
                 width = 0-scalewidth.integerValue
                 height = 0-scaleheight.integerValue
             }
-            ms.start( width: width, height: height )
+            ms.start( width: width, height: height, status_callback: statusUpdate )
             button.title = "Stop"
         }
     }

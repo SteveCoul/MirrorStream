@@ -80,7 +80,7 @@ void add_stream( enum AVCodecID codec_id) {
     m_codec_context->time_base       = (AVRational){1001, 30000};   /// \todo get the proper framerate/timing from source video and pass it into encoder
     m_codec_context->pix_fmt       = m_pixel_format;
     m_codec_context->gop_size = 10;
-    av_opt_set( m_codec_context->priv_data, "tune", "zerolatency", 0);
+   // av_opt_set( m_codec_context->priv_data, "tune", "zerolatency", 0);
     av_opt_set( m_codec_context->priv_data, "x264opts", "repeat-headers=1", 1); // x264 outputs SPS/PSS on each IFrame
 }
 
