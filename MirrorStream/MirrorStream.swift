@@ -10,17 +10,6 @@
 // How to move the cursor (later)
 //      CGDisplayMoveCursorToPoint( displayIDS[0], CGPoint( x: 0, y: 0 ) )
 
-// TODO maybe use CGDisplayStream instead? It can do the YUV conversion for me I believe?
-
-/*
-
-fix the EGAIN thing in the _SC_RAW_SOCKETS
-
-why the long startup time in ffplay?
-
-
-*/
-
 import Foundation
 import QuartzCore
 
@@ -34,12 +23,17 @@ class MirrorStream {
     var m_width : Int;
     var m_height : Int;
     
+    var vwidth : Int;
+    var vheight : Int;
+
     init() {
         running = false
         has_stopped = false
         output = Output()
         m_width = 0
         m_height = 0
+        vwidth = 0
+        vheight = 0
     }
 
     func isrunning() -> Bool {
@@ -98,9 +92,6 @@ class MirrorStream {
         
         var image : CGImage = CGDisplayCreateImage( displayIDS[0] )!
 
-        var vwidth : Int;
-        var vheight : Int;
-
         if ( m_width == 0 ) {
             vwidth = image.width;
         } else if ( m_width < 0 ) {
@@ -126,7 +117,7 @@ class MirrorStream {
                         if ( SELF.counter == 50 ) {
                             SELF.counter = 0
                             let rate : Int = (SELF.output?.bitrate())!
-                            SELF.status_callback!( "Mirroring, " + String(describing:rate) + " bps" )
+                            SELF.status_callback!( "Mirroring, " + String(describing:rate) + " bps, size " + String(SELF.vwidth) + "x" + String(SELF.vheight) )
                         }
                         return (Int32)(SELF.output!.write( data: output ))
                     } )
