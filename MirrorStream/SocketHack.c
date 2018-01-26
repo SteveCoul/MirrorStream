@@ -75,7 +75,9 @@ bool WriteSocketHack( const void* ptr, size_t len ) {
                 (void)write( clients[i], resp, strlen(resp) );
                 
                 int flag = 1; (void)setsockopt(cfd, SOL_SOCKET, SO_NOSIGPIPE, &flag, sizeof(flag) );  // because we don't have MSG_NOSIGNAL
-
+                
+                flag = 1*1024*1024; (void)setsockopt( cfd, SOL_SOCKET, SO_SNDBUF, &flag, sizeof(flag) );
+                
                 break;
             }
         }
