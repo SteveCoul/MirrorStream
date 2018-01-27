@@ -174,6 +174,9 @@ void newFrame( AVFrame* frame ) {
         if (got_packet) {
             pkt.stream_index = m_stream->index;
             ret = av_interleaved_write_frame(m_format_context, &pkt);
+            if ( ret != 0 ) {
+                fprintf( stderr, "something bad in interleaved frame write\n" );
+            }
             // ERROR CHECK
         }
     } while ( got_packet && !frame );

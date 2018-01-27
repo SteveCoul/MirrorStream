@@ -18,6 +18,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var pixelheight: NSTextField!
     @IBOutlet weak var pixelwidth: NSTextField!
     @IBOutlet weak var button: NSButton!
+    
     let ms = MirrorStream()
     
     @IBAction func onModeSelectChange(_ sender: Any) {

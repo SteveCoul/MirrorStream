@@ -116,8 +116,7 @@ class MirrorStream {
                         SELF.counter = SELF.counter + 1
                         if ( SELF.counter == 50 ) {
                             SELF.counter = 0
-                            let rate : Int = (SELF.output?.bitrate())!
-                            SELF.status_callback!( "Mirroring, " + String(describing:rate) + " bps, size " + String(SELF.vwidth) + "x" + String(SELF.vheight) )
+                            SELF.status_callback!( "Mirroring, " + String(SELF.vwidth) + "x" + String(SELF.vheight) )
                         }
                         return (Int32)(SELF.output!.write( data: output ))
                     } )
