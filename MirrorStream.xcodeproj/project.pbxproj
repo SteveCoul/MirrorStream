@@ -13,7 +13,6 @@
 		4A52C17E201775100063EA31 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A52C17D201775100063EA31 /* Assets.xcassets */; };
 		4A52C181201775100063EA31 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A52C17F201775100063EA31 /* Main.storyboard */; };
 		4A52C18A201776D80063EA31 /* MirrorStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A52C189201776D80063EA31 /* MirrorStream.swift */; };
-		4A52C18E2017773B0063EA31 /* ffmpegbridge.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A52C18D2017773B0063EA31 /* ffmpegbridge.c */; };
 		4A52C194201780BA0063EA31 /* include in Resources */ = {isa = PBXBuildFile; fileRef = 4A52C192201780B70063EA31 /* include */; };
 		4A52C195201780BA0063EA31 /* lib in Resources */ = {isa = PBXBuildFile; fileRef = 4A52C193201780BA0063EA31 /* lib */; };
 		4A52C1A9201784380063EA31 /* libavutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A52C19E201783D90063EA31 /* libavutil.a */; };
@@ -33,6 +32,7 @@
 		4A52C1BD201785640063EA31 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A52C1BB201785640063EA31 /* CoreServices.framework */; };
 		4A52C1BF201785900063EA31 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A52C1BE201785900063EA31 /* CoreMedia.framework */; };
 		4A52C1C1201785B30063EA31 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A52C1C0201785B30063EA31 /* VideoToolbox.framework */; };
+		4A552C90201CD5A1002B047F /* VideoEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A552C8F201CD5A1002B047F /* VideoEncoder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,8 +46,6 @@
 		4A52C183201775100063EA31 /* MirrorStream.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MirrorStream.entitlements; sourceTree = "<group>"; };
 		4A52C189201776D80063EA31 /* MirrorStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorStream.swift; sourceTree = "<group>"; };
 		4A52C18B2017773A0063EA31 /* MirrorStream-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MirrorStream-Bridging-Header.h"; sourceTree = "<group>"; };
-		4A52C18C2017773B0063EA31 /* ffmpegbridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ffmpegbridge.h; sourceTree = "<group>"; };
-		4A52C18D2017773B0063EA31 /* ffmpegbridge.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ffmpegbridge.c; sourceTree = "<group>"; };
 		4A52C192201780B70063EA31 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; path = include; sourceTree = "<group>"; };
 		4A52C193201780BA0063EA31 /* lib */ = {isa = PBXFileReference; lastKnownFileType = folder; path = lib; sourceTree = "<group>"; };
 		4A52C197201783D90063EA31 /* libavfilter.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavfilter.a; path = MirrorStream/Externals/lib/libavfilter.a; sourceTree = "<group>"; };
@@ -67,6 +65,7 @@
 		4A52C1BB201785640063EA31 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		4A52C1BE201785900063EA31 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		4A52C1C0201785B30063EA31 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		4A552C8F201CD5A1002B047F /* VideoEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEncoder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,8 +125,7 @@
 				4A52C182201775100063EA31 /* Info.plist */,
 				4A52C183201775100063EA31 /* MirrorStream.entitlements */,
 				4A52C189201776D80063EA31 /* MirrorStream.swift */,
-				4A52C18C2017773B0063EA31 /* ffmpegbridge.h */,
-				4A52C18D2017773B0063EA31 /* ffmpegbridge.c */,
+				4A552C8F201CD5A1002B047F /* VideoEncoder.swift */,
 				4A52C18B2017773A0063EA31 /* MirrorStream-Bridging-Header.h */,
 			);
 			path = MirrorStream;
@@ -242,8 +240,8 @@
 			files = (
 				4A12DDE02018E10C005E81ED /* Output.swift in Sources */,
 				4A52C18A201776D80063EA31 /* MirrorStream.swift in Sources */,
-				4A52C18E2017773B0063EA31 /* ffmpegbridge.c in Sources */,
 				4A52C17C201775100063EA31 /* ViewController.swift in Sources */,
+				4A552C90201CD5A1002B047F /* VideoEncoder.swift in Sources */,
 				4A52C17A201775100063EA31 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

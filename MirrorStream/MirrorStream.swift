@@ -108,33 +108,20 @@ class MirrorStream {
             vheight = m_height;
         }
         
-        CreateFFMPEGx264( Int32(image.width), Int32(image.height), Int32(vwidth), Int32(vheight),
-                    Unmanaged.passUnretained(self).toOpaque(),
-                    { ( rawSELF: UnsafeMutableRawPointer?, data : UnsafeMutablePointer<UInt8>?, length: Int ) -> (Int32) in
-                        let SELF : MirrorStream = Unmanaged.fromOpaque( rawSELF! ).takeUnretainedValue()
-                        let output : Data = NSData( bytes: data, length: length ) as Data
-                        SELF.counter = SELF.counter + 1
-                        if ( SELF.counter == 50 ) {
-                            SELF.counter = 0
-                            SELF.status_callback!( "Mirroring, " + String(SELF.vwidth) + "x" + String(SELF.vheight) )
-                        }
-                        return (Int32)(SELF.output!.write( data: output ))
-                    } )
-        
+        var vid = VideoEncoder( width: image.width, height: image.height, output_width: vwidth, output_height: vheight, write_callback: output!.write )
+ 
         status_callback!("Mirroring")
         
         while running {
             image = CGDisplayCreateImage( displayIDS[0] )!
             
             // TODO - create a context. render this image to it, render a mouse pointer to it, use makeImage() to get an image back that has the cursor on it!
+         
+            let d : CFData = (image.dataProvider?.data)!
+            vid.encode(image: d as Data )
             
-            FeedFFMPEGx264(CFDataGetBytePtr(image.dataProvider?.data)!, Int(CFDataGetLength( image.dataProvider?.data )))
         }
         has_stopped = true
-    }
-    
-    deinit {
-        DestroyFFMPEGx264()
     }
     
 }
