@@ -132,11 +132,11 @@ class VideoEncoder {
         }
     }
     
-    func performScaleSWS(  s_data: [UnsafePointer<UInt8>?], s_len: [Int32], d_data:  [UnsafeMutablePointer<UInt8>?], d_len: [Int32] ) {
+    func performScale(  s_data: [UnsafePointer<UInt8>?], s_len: [Int32], d_data:  [UnsafeMutablePointer<UInt8>?], d_len: [Int32] ) {
         sws_scale( sws_ctx!, s_data, s_len, Int32(0), Int32(m_height), d_data, d_len )
     }
-    
-    func encode( image: Data ) -> Int {
+
+    func encode( image: Data ) -> Void {
         var frame : UnsafeMutablePointer<AVFrame>?
         
         frame = av_frame_alloc()
@@ -167,13 +167,12 @@ class VideoEncoder {
             d_len.remove( at: 1 ); d_len.insert( (frame?.pointee.linesize.1)!, at: 1 )
             d_len.remove( at: 2 ); d_len.insert( (frame?.pointee.linesize.2)!, at: 2 )
 
-            performScaleSWS( s_data: s_data, s_len: s_len, d_data: d_data, d_len: d_len )
+            performScale( s_data: s_data, s_len: s_len, d_data: d_data, d_len: d_len )
             
         }
         
         newFrame( frame: frame )
         av_frame_free( &frame )
-        return image.count;
     }
     
 }

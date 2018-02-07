@@ -108,7 +108,7 @@ class MirrorStream {
             vheight = m_height;
         }
         
-        var vid = VideoEncoder( width: image.width, height: image.height, output_width: vwidth, output_height: vheight, write_callback: output!.write )
+        let vid = VideoEncoder( width: image.width, height: image.height, output_width: vwidth, output_height: vheight, write_callback: output!.write )
  
         status_callback!("Mirroring")
         
