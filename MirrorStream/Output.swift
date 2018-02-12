@@ -83,9 +83,9 @@ class Output {
         if ( ret >= 0 ) {
             print("Incoming client " + String(ret) )
             
-            var response = "HTTP/1.0 200 Okay\r\n\r\n".utf8
+            let response = "HTTP/1.0 200 Okay\r\n\r\n"
             
-            send( ret, &response, response.count, 0 )
+            send( ret, response, response.count, 0 )
             
             var flag : Int32 = 1
             setsockopt( ret, SOL_SOCKET, SO_NOSIGPIPE, &flag, socklen_t( MemoryLayout.size(ofValue: flag ) ) );
@@ -103,7 +103,7 @@ class Output {
         
         rc = data.withUnsafeBytes { ( bptr: UnsafePointer<UInt8> ) -> Bool in
             let raw = UnsafeRawPointer( bptr )
-            ret = send( fd, raw, data.count, 0 )
+            ret = 0; //         ret = send( fd, raw, data.count, 0 )
             if ( ret < 0 ) {
                 if ( errno == EPIPE ) {
                     print("Client " + String( fd ) + " gone" )
