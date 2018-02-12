@@ -22,7 +22,7 @@ class MirrorStream {
     var has_stopped : Bool;
     var m_width : Int;
     var m_height : Int;
-    
+    var m_encoder : VideoEncoder?
     var vwidth : Int;
     var vheight : Int;
 
@@ -65,7 +65,14 @@ class MirrorStream {
             print("Stopped")
         }
     }
-    
+
+    func write( data: Data ) -> Int {
+        if ( output!.tryAccept() ) {
+            m_encoder?.requestIFrame()
+        }
+        return output!.write( data: data )
+    }
+        
     @objc func run() {
     
         var count : UInt32 = 0
@@ -108,7 +115,7 @@ class MirrorStream {
             vheight = m_height;
         }
         
-        let vid = VideoEncoder( width: image.width, height: image.height, output_width: vwidth, output_height: vheight, write_callback: output!.write )
+        m_encoder = VideoEncoder( width: image.width, height: image.height, output_width: vwidth, output_height: vheight, write_callback: write )
  
         status_callback!("Mirroring")
         
@@ -118,7 +125,7 @@ class MirrorStream {
             // TODO - create a context. render this image to it, render a mouse pointer to it, use makeImage() to get an image back that has the cursor on it!
          
             let d : CFData = (image.dataProvider?.data)!
-            vid.encode(image: d as Data )
+            m_encoder?.input(image: d as Data )
             
         }
         has_stopped = true

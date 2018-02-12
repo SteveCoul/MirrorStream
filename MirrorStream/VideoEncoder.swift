@@ -34,7 +34,8 @@ class VideoEncoder {
     var m_output_height: Int;
     var m_callback : ( (Data) -> Int )?
     
-
+    var m_request_iframe = false
+    
     var m_io_context_buffer : UnsafeMutablePointer<UInt8>?
     var m_io_context : UnsafeMutablePointer<AVIOContext>?
     var m_format_context : UnsafeMutablePointer<AVFormatContext>?
@@ -132,11 +133,15 @@ class VideoEncoder {
         }
     }
     
+    func requestIFrame() {
+        m_request_iframe = true
+    }
+    
     func performScale(  s_data: [UnsafePointer<UInt8>?], s_len: [Int32], d_data:  [UnsafeMutablePointer<UInt8>?], d_len: [Int32] ) {
         sws_scale( sws_ctx!, s_data, s_len, Int32(0), Int32(m_height), d_data, d_len )
     }
 
-    func encode( image: Data ) -> Void {
+    func input( image: Data ) -> Void {
         var frame : UnsafeMutablePointer<AVFrame>?
         
         frame = av_frame_alloc()
@@ -144,7 +149,11 @@ class VideoEncoder {
         frame?.pointee.height = Int32(m_output_height)
         frame?.pointee.format = Int32(AV_PIX_FMT_YUV420P.rawValue)
         frame?.pointee.pts = ( NOW() - m_base_clock ) * 90
-    
+        if ( m_request_iframe ) {
+            frame?.pointee.pict_type = AV_PICTURE_TYPE_I
+            m_request_iframe = false
+        }
+        
         av_frame_get_buffer( frame, 32 )
      
         av_frame_make_writable( frame )

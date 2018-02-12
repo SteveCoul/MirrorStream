@@ -71,7 +71,7 @@ class Output {
         }
     }
     
-    func tryAccept() {
+    func tryAccept() -> Bool {
         var sai = sockaddr_in( sin_len: 0,  sin_family: UInt8(0), sin_port: UInt16( 0 ).bigEndian, sin_addr: in_addr( s_addr: 0),  sin_zero: (0,0,0,0,0,0,0,0) )
         var sai_len : socklen_t = socklen_t(MemoryLayout.size(ofValue: sai ))
 
@@ -91,29 +91,38 @@ class Output {
             setsockopt( ret, SOL_SOCKET, SO_NOSIGPIPE, &flag, socklen_t( MemoryLayout.size(ofValue: flag ) ) );
             flag = 1*1024*1024
             setsockopt( ret, SOL_SOCKET, SO_SNDBUF, &flag, socklen_t( MemoryLayout.size(ofValue: flag ) ) );
-
             self.m_clients.append( ret )
+            return true
         }
+        return false
+    }
+    
+    func sendData( fd: Int32, data: Data ) -> Bool {
+        var ret : Int = 0
+        var rc : Bool = false
+        
+        rc = data.withUnsafeBytes { ( bptr: UnsafePointer<UInt8> ) -> Bool in
+            let raw = UnsafeRawPointer( bptr )
+            ret = send( fd, raw, data.count, 0 )
+            if ( ret < 0 ) {
+                if ( errno == EPIPE ) {
+                    print("Client " + String( fd ) + " gone" )
+                    return true
+                } else {
+                    print("Lost some data sending to " + String( fd ) )
+                }
+            }
+            return false
+        }
+        return rc
     }
     
     func write( data: Data ) -> Int {
-        tryAccept()
         if ( m_clients.count > 0 ) {
             for idx in 0...m_clients.count-1 {
-                let client = m_clients[ idx ]
-                var ret : Int = 0
-                data.withUnsafeBytes { ( bptr: UnsafePointer<UInt8> ) in
-                    let raw = UnsafeRawPointer( bptr )
-                    ret = send( client, raw, data.count, 0 )
-                    if ( ret < 0 ) {
-                        if ( errno == EPIPE ) {
-                            print("Client " + String( client ) + " gone" )
-                            close( client )
-                            m_clients[ idx ] = -1
-                        } else {
-                            print("Lost some data sending to " + String( client ) )
-                        }
-                    }
+                if ( sendData( fd: m_clients[ idx ], data: data ) == true ) {
+                    close( m_clients[idx] )
+                    m_clients[idx] = -1
                 }
             }
             m_clients = m_clients.filter { $0 != -1 }
