@@ -94,11 +94,11 @@
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="MirrorStream" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="318"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fhJ-M9-FKv">
-                                <rect key="frame" x="66" y="169" width="83" height="32"/>
+                                <rect key="frame" x="66" y="217" width="83" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Record" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="f40-ja-j4J">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -109,7 +109,7 @@
                                 </connections>
                             </button>
                             <box fixedFrame="YES" title="Output VIdeo Size" translatesAutoresizingMaskIntoConstraints="NO" id="89W-oT-bB6">
-                                <rect key="frame" x="223" y="152" width="183" height="98"/>
+                                <rect key="frame" x="223" y="200" width="183" height="98"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="ZYR-wi-LfU">
                                     <rect key="frame" x="2" y="2" width="179" height="81"/>
@@ -157,7 +157,7 @@
                                 </view>
                             </box>
                             <box fixedFrame="YES" title="Output VIdeo Scale" translatesAutoresizingMaskIntoConstraints="NO" id="rnj-gY-YeS">
-                                <rect key="frame" x="223" y="50" width="183" height="98"/>
+                                <rect key="frame" x="223" y="98" width="183" height="98"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="cdg-Oo-Svw">
                                     <rect key="frame" x="2" y="2" width="179" height="81"/>
@@ -205,7 +205,7 @@
                                 </view>
                             </box>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NgQ-Nk-riu">
-                                <rect key="frame" x="404" y="155" width="78" height="18"/>
+                                <rect key="frame" x="404" y="203" width="78" height="18"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="radio" title="Enable" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="z9O-qL-4KL">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -216,7 +216,7 @@
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EZT-ui-3Ef">
-                                <rect key="frame" x="404" y="53" width="78" height="18"/>
+                                <rect key="frame" x="404" y="101" width="78" height="18"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="radio" title="Enable" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="6Ud-4j-Fed">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -227,9 +227,18 @@
                                 </connections>
                             </button>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YC5-kf-kzC">
-                                <rect key="frame" x="20" y="20" width="442" height="17"/>
+                                <rect key="frame" x="20" y="68" width="442" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="TZf-e3-ldU">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1vF-tr-bcd">
+                                <rect key="frame" x="22" y="20" width="440" height="17"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Example:ffplay http://127.0.0.1:32088 -analyzeduration 1 -probesize 32" id="O3B-vV-o8g">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -250,7 +259,7 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="655"/>
+            <point key="canvasLocation" x="75" y="679"/>
         </scene>
     </scenes>
 </document>
