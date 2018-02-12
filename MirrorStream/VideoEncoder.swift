@@ -146,9 +146,26 @@ class VideoEncoder {
         frame?.pointee.pts = ( NOW() - m_base_clock ) * 90
     
         av_frame_get_buffer( frame, 32 )
+     
+        av_frame_make_writable( frame )
 
-        image.withUnsafeBytes { (ptr: UnsafePointer<UInt8> ) in
-        
+        /* WARNING
+         
+            I used to call withUnsafeBytes() on the image object, this caused a memory leak of about 1Gb every 4 seconds testing.
+            Something about an actual copy being made but not released when the source data was referenced. ( IE just calling withUnsafeBytes()
+            didn't cause the problem, but when I used the data.....
+         
+            I also experimented with creating an array and using image.copyBytes() to copy out the data with the same problem.
+         
+            But, if I make a copy of the Data object using subdata() and access the copy I don't get a problem.
+         
+            So it's specifically the particular type of Data object that image is. Probably something to do with it coming from a OSX
+            routine in objc and having a reference counting bug or requriement I don't understand.
+         
+            Would love to get rid of this copy! (FIXMXE)
+        */
+        image.subdata( in: 0..<(m_width*m_height*4)).withUnsafeBytes { (ptr: UnsafePointer<UInt8> ) in
+
             var s_data = [UnsafePointer<UInt8>?]( repeating: nil, count: 8 )
             var s_len = [Int32]( repeating: 0, count: 8 )
 
@@ -156,9 +173,8 @@ class VideoEncoder {
             var d_len = [Int32]( repeating: 0, count: 8 )
             
             s_data[0] = ptr
-     
             s_len[0] = Int32( m_width * 4 )
-            
+
             d_data.remove( at: 0 ); d_data.insert( frame?.pointee.data.0, at: 0 )
             d_data.remove( at: 1 ); d_data.insert( frame?.pointee.data.1, at: 1 )
             d_data.remove( at: 2 ); d_data.insert( frame?.pointee.data.2, at: 2 )
@@ -168,7 +184,6 @@ class VideoEncoder {
             d_len.remove( at: 2 ); d_len.insert( (frame?.pointee.linesize.2)!, at: 2 )
 
             performScale( s_data: s_data, s_len: s_len, d_data: d_data, d_len: d_len )
-            
         }
         
         newFrame( frame: frame )
