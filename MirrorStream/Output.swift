@@ -83,9 +83,27 @@ class Output {
         if ( ret >= 0 ) {
             print("Incoming client " + String(ret) )
             
-            let response = "HTTP/1.0 200 Okay\r\n\r\n"
             
+            /*
+                    Argh. Swift string literals seem to collapse the sequence \r\n into a single character???
+ 
+                    "\r\n\r\n" has a count of 2 when passed to C
+ 
+                    let response = "HTTP/1.0 200 Okay\r\n\r\n"
+            
+                    send( ret, response, response.count, 0 )
+ 
+                    fails miserably.
+            */
+
+            var response = [UInt8]()
+            response += "HTTP/1.0 200 Okay".utf8
+            response.append( UInt8(13) )
+            response.append( UInt8(10) )
+            response.append( UInt8(13) )
+            response.append( UInt8(10) )
             send( ret, response, response.count, 0 )
+
             
             var flag : Int32 = 1
             setsockopt( ret, SOL_SOCKET, SO_NOSIGPIPE, &flag, socklen_t( MemoryLayout.size(ofValue: flag ) ) );
