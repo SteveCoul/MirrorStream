@@ -67,6 +67,11 @@ class MirrorStream {
     }
 
     func write( data: Data ) -> Int {
+        
+        /*
+            TODO on initial start up, buffer anything that looks like a PAT/PMT. Pass this to tryAccept() later so it can prime new http connections with this information right from the start
+        */
+        
         if ( output!.tryAccept() ) {
             m_encoder?.requestIFrame()
         }
@@ -115,7 +120,7 @@ class MirrorStream {
             vheight = m_height;
         }
         
-        m_encoder = VideoEncoder( width: image.width, height: image.height, output_width: vwidth, output_height: vheight, write_callback: write )
+        m_encoder = VideoEncoder( pmt_pid: 256, video_pid: 512, width: image.width, height: image.height, output_width: vwidth, output_height: vheight, write_callback: write )
  
         status_callback!("Mirroring")
         
