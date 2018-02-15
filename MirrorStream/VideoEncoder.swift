@@ -52,8 +52,8 @@ class VideoEncoder {
         return Int32( m_callback!( data ) )
     }
 
-    init( width: Int, height: Int, output_width: Int, output_height: Int, write_callback: @escaping ( Data ) -> Int ) {
-    
+    init( pmt_pid: Int, video_pid: Int, width: Int, height: Int, output_width: Int, output_height: Int, write_callback: @escaping ( Data ) -> Int ) {
+
         m_callback = write_callback
         
         m_width = width
@@ -69,8 +69,10 @@ class VideoEncoder {
         
         m_io_context_buffer = av_malloc( ENCODER_BUFFER_SIZE ).assumingMemoryBound( to: UInt8.self )
         m_io_context = avio_alloc_context( m_io_context_buffer, Int32(ENCODER_BUFFER_SIZE), Int32(1), /* opqaue */ opaque, nil, write_packet, nil )
+        
         avformat_alloc_output_context2( &m_format_context, nil, "mpegts", nil )
         m_format_context?.pointee.pb = m_io_context
+        
         m_output_format = m_format_context?.pointee.oformat
         m_output_format?.pointee.video_codec = AV_CODEC_ID_H264
         
@@ -88,17 +90,23 @@ class VideoEncoder {
         m_codec_context?.pointee.gop_size = 10
         // av_opt_set( m_codec_context->priv_data, "tune", "zerolatency", 0);
         av_opt_set( m_codec_context?.pointee.priv_data, "x264opts", "repeat-headers=1", 1) // x264 outputs SPS/PSS on each IFrame
-        
+
+        var dictionary = OpaquePointer( bitPattern: 0 )
+        av_dict_set( &dictionary, "mpegts_pmt_start_pid", String( format: "0x%x", pmt_pid ), 0 )
+        av_dict_set( &dictionary, "mpegts_start_pid",     String( format: "0x%x", video_pid ), 0 )
+
         if ( avcodec_open2( m_codec_context, m_codec, nil ) < 0 ) {
             print("Failed too open video codec");
         } else if ( avcodec_parameters_from_context( m_stream?.pointee.codecpar, m_codec_context ) < 0 ) {
             print("Failed to copy stream parameters")
-        } else if ( avformat_write_header( m_format_context, nil ) < 0 ) {
+        } else if ( avformat_write_header( m_format_context, &dictionary ) < 0 ) {
             print("Failed to setup output file")
         } else {
             print(" I have a video encoder I think" )
             sws_ctx = sws_getContext( Int32(m_width), Int32(m_height), AV_PIX_FMT_BGR0, Int32(m_output_width), Int32(m_output_height), AV_PIX_FMT_YUV420P, SWS_BILINEAR, nil, nil, nil )
         }
+
+        av_dict_free( &dictionary )
     }
     
     deinit {

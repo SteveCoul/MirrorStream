@@ -6,5 +6,6 @@
 #include "libavutil/opt.h"
 #include "libavutil/imgutils.h"
 #include "libavutil/parseutils.h"
+#include "libavutil/dict.h"
 #include "libswscale/swscale.h"
 
