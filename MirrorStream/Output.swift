@@ -103,7 +103,7 @@ class Output {
         
         rc = data.withUnsafeBytes { ( bptr: UnsafePointer<UInt8> ) -> Bool in
             let raw = UnsafeRawPointer( bptr )
-            ret = 0; //         ret = send( fd, raw, data.count, 0 )
+            ret = send( fd, raw, data.count, 0 )
             if ( ret < 0 ) {
                 if ( errno == EPIPE ) {
                     print("Client " + String( fd ) + " gone" )
