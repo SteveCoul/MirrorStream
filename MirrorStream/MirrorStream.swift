@@ -14,6 +14,8 @@ import Foundation
 import QuartzCore
 
 class MirrorStream {
+   
+    let video_pid = 512
     
     var counter : Int = 0
     var status_callback : ((String)->Void )?
@@ -25,7 +27,9 @@ class MirrorStream {
     var m_encoder : VideoEncoder?
     var vwidth : Int;
     var vheight : Int;
-
+    var buffer : Data = Data()
+    var capture_header = false
+    
     init() {
         running = false
         has_stopped = false
@@ -65,21 +69,59 @@ class MirrorStream {
             print("Stopped")
         }
     }
-
+    
+    /*
+        The incoming stream will pass PAT/PMT ( and probably SDT knowing ffmpeg ) periodically.
+        The incoming stream to this point may not be packet aligned.
+        A connection can occur over HTTP at any point.
+ 
+        We want, a connection to get a valid PAT and PMT, then data starting at at least a TS packet boundary and ideally an iframe.
+ 
+        So, we're going to massage the stream.
+ 
+        First, during initial startup we'll keep PAT and PMT packets ( basically buffer everything from the encoder until we see something other than PAT,PMT ). ( N.B actually, look for first video packet )
+                This buffer will sent to the output chain if tryAccept() passes, meaning the new stream will get them. existing http connections will see an extra PAT/PMT ( probably with incorrect TS CC counters )
+                but I can live with that for now. I don't want the output class to know anything about mpeg ts. Later I'll probably just filter PAT/PMT from the output after I get started, not technically mpeg but
+                probably fine.
+     */
+    
     func write( data: Data ) -> Int {
+     
+        if ( ( data.count % 188 ) != 0 ) {
+            print("FIXME - no packet aligned writes.")
+        }
+
+        if ( data[0] != 0x47 ) {
+            print("Non MPEG")
+        }
         
-        /*
-            TODO on initial start up, buffer anything that looks like a PAT/PMT. Pass this to tryAccept() later so it can prime new http connections with this information right from the start
-        */
+        if ( capture_header ) {
+            for i in stride( from: 0, to: data.count, by: 188 ) {
+                var pid : Int = Int( data[ i+1 ] & 0x1F )
+                pid = ( pid << 8 ) | Int( data[ i+2 ] )
+                
+                if ( pid != video_pid ) {
+                    print("Initial data, packet of pid \(pid) from source \(i)")
+                    buffer.append( data.subdata( in: i..<(i+188)))
+                } else {
+                    capture_header = false
+                    break
+                }
+            }
+        }
         
-        if ( output!.tryAccept() ) {
+        if ( output!.tryAccept( initial_data: buffer ) ) {
             m_encoder?.requestIFrame()
         }
+        
         return output!.write( data: data )
     }
         
     @objc func run() {
     
+        buffer.removeAll()
+        capture_header = true
+        
         var count : UInt32 = 0
         CGGetActiveDisplayList( 0, nil, &count )
         
@@ -120,7 +162,7 @@ class MirrorStream {
             vheight = m_height;
         }
         
-        m_encoder = VideoEncoder( pmt_pid: 256, video_pid: 512, width: image.width, height: image.height, output_width: vwidth, output_height: vheight, write_callback: write )
+        m_encoder = VideoEncoder( pmt_pid: 256, video_pid: video_pid, width: image.width, height: image.height, output_width: vwidth, output_height: vheight, write_callback: write )
  
         status_callback!("Mirroring")
         

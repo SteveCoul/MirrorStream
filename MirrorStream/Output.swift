@@ -71,7 +71,7 @@ class Output {
         }
     }
     
-    func tryAccept() -> Bool {
+    func tryAccept( initial_data : Data ) -> Bool {
         var sai = sockaddr_in( sin_len: 0,  sin_family: UInt8(0), sin_port: UInt16( 0 ).bigEndian, sin_addr: in_addr( s_addr: 0),  sin_zero: (0,0,0,0,0,0,0,0) )
         var sai_len : socklen_t = socklen_t(MemoryLayout.size(ofValue: sai ))
 
@@ -91,7 +91,20 @@ class Output {
             setsockopt( ret, SOL_SOCKET, SO_NOSIGPIPE, &flag, socklen_t( MemoryLayout.size(ofValue: flag ) ) );
             flag = 1*1024*1024
             setsockopt( ret, SOL_SOCKET, SO_SNDBUF, &flag, socklen_t( MemoryLayout.size(ofValue: flag ) ) );
+
+            flag = 1
+            setsockopt( ret, IPPROTO_TCP, TCP_NODELAY, &flag, socklen_t( MemoryLayout.size(ofValue: flag ) ) );
+
+            if ( initial_data.count > 0 ) {
+                if ( sendData( fd: ret, data: initial_data ) ) {
+                    /* client went immediately away, ignore it */
+                    close( ret )
+                    return false
+                }
+            }
+
             self.m_clients.append( ret )
+
             return true
         }
         return false
@@ -100,7 +113,7 @@ class Output {
     func sendData( fd: Int32, data: Data ) -> Bool {
         var ret : Int = 0
         var rc : Bool = false
-        
+    
         rc = data.withUnsafeBytes { ( bptr: UnsafePointer<UInt8> ) -> Bool in
             let raw = UnsafeRawPointer( bptr )
             ret = send( fd, raw, data.count, 0 )
