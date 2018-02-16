@@ -47,6 +47,28 @@ class VideoEncoder {
     
     var m_base_clock : Int64
 
+    var m_current_fps : Int = 0
+    var m_fps_start : Int64 = 0
+    var m_fps_count : Int = 0
+    
+    func updatefps() {
+        m_fps_count = m_fps_count + 1
+        
+        let n = NOW()
+        let d = n - m_fps_start
+        let s = Int( d ) / 1000
+        
+        if ( s > 5 ) {
+            m_current_fps = m_fps_count / s
+            m_fps_start = NOW()
+            m_fps_count = 0
+        }
+    }
+    
+    func fps() -> Int {
+        return m_current_fps
+    }
+    
     func writePacket( data: UnsafeMutablePointer<UInt8>?, length: Int32 ) -> Int32 {
         let data : Data = Data(bytesNoCopy: data!, count: Int(length), deallocator: .none )
         return Int32( m_callback!( data ) )
@@ -205,6 +227,7 @@ class VideoEncoder {
         
         newFrame( frame: frame )
         av_frame_free( &frame )
+        updatefps()
     }
     
 }
