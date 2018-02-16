@@ -166,6 +166,8 @@ class MirrorStream {
  
         status_callback!("Mirroring")
         
+        var old_fps = m_encoder?.fps()
+        
         while running {
             image = CGDisplayCreateImage( displayIDS[0] )!
             
@@ -174,6 +176,12 @@ class MirrorStream {
             let d : CFData = (image.dataProvider?.data)!
             m_encoder?.input(image: d as Data )
             
+            var fps = 0
+            fps = (m_encoder?.fps())!
+            if ( fps != old_fps ) {
+                status_callback!("Mirroring : \(fps) fps" )
+                old_fps = fps
+            }
         }
         has_stopped = true
     }
