@@ -10,8 +10,12 @@ import Foundation
 
 class Output {
 
+    var m_client_queue      = DispatchQueue( label: "OutputClientQueue" )
+    var m_buffer_queue      = DispatchQueue( label: "OutputBufferQueue" )
+    
     var m_server_fd : Int32 = -1
-    var m_clients = [Int32]()
+    var m_clients           = [Int32]()
+    var m_buffer            = Data()
     
     init() {
         stopServer()
@@ -23,14 +27,20 @@ class Output {
     }
     
     func stopServer() {
-        for client in m_clients {
-            if ( client != -1 ) {
-                close( client )
+        m_client_queue.sync {
+            for client in m_clients {
+                if ( client != -1 ) {
+                    close( client )
+                }
             }
+            m_clients = [Int32]()
         }
-        m_clients = [Int32]()
         close( m_server_fd )
         m_server_fd = -1
+        m_buffer_queue.sync {
+            m_buffer.removeAll()
+            self.process()
+        }
     }
     
     func startServer() {
@@ -65,6 +75,7 @@ class Output {
                         print("Failed to make server non blocking")
                     } else {
                         print("TCP Server socket established")
+                        m_buffer_queue.sync { self.process() }
                     }
                 }
             }
@@ -121,7 +132,9 @@ class Output {
                 }
             }
 
-            self.m_clients.append( ret )
+            m_client_queue.sync {
+                self.m_clients.append( ret )
+            }
 
             return true
         }
@@ -149,15 +162,37 @@ class Output {
     }
     
     func write( data: Data ) -> Int {
-        if ( m_clients.count > 0 ) {
-            for idx in 0...m_clients.count-1 {
-                if ( sendData( fd: m_clients[ idx ], data: data ) == true ) {
-                    close( m_clients[idx] )
-                    m_clients[idx] = -1
-                }
-            }
-            m_clients = m_clients.filter { $0 != -1 }
+        m_buffer_queue.sync {
+            self.m_buffer.append( data )
+        }
+        m_buffer_queue.async {
+            self.process()
         }
         return data.count
+    }
+    
+    func process() {
+        var to_send = Data()
+        
+        if ( m_buffer.count > 0 ) {
+            // For now, take all the data and block on sending, later may just take chunks
+            to_send = m_buffer
+            m_buffer = Data()
+        }
+        
+        if ( to_send.count > 0 ) {
+            m_client_queue.sync {
+                if ( m_clients.count > 0 ) {
+                    for idx in 0...m_clients.count-1 {
+                        if ( sendData( fd: m_clients[ idx ], data: to_send ) == true ) {
+                            close( m_clients[idx] )
+                            m_clients[idx] = -1
+                        }
+                    }
+                    m_clients = m_clients.filter { $0 != -1 }
+                }
+            }
+        }
+        
     }
 }
