@@ -12,32 +12,58 @@
 
 import Foundation
 import QuartzCore
+import AVFoundation
 
-class MirrorStream {
+
+class MirrorStream: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
    
     let video_pid = 512
     
     var counter : Int = 0
     var status_callback : ((String)->Void )?
-    var output : Output?
-    var running : Bool
-    var has_stopped : Bool;
-    var m_width : Int;
-    var m_height : Int;
+    var output : Output = Output()
+    var running : Bool = false
+    var has_stopped : Bool = false
+    var m_width : Int = 0
+    var m_height : Int = 0
     var m_encoder : VideoEncoder?
-    var vwidth : Int;
-    var vheight : Int;
+    var vwidth : Int = 0
+    var vheight : Int = 0
     var buffer : Data = Data()
     var capture_header = false
+    var audio_capture_session = AVCaptureSession()
+    var audio_dispatch_queue = DispatchQueue( label: "audioq" )
     
-    init() {
-        running = false
-        has_stopped = false
-        output = Output()
-        m_width = 0
-        m_height = 0
-        vwidth = 0
-        vheight = 0
+    var audio_data = Data()
+//NOTUSINGREALPTS    var audio_pts : Double = 0
+    var audio_written : Int64 = 0
+    var fake_audio_pts : Int64 = 0
+
+    func getAudioDevice() -> AVCaptureDevice {
+        for device in AVCaptureDevice.devices() {
+            if ( device.localizedName == "Display Audio" ) {
+                return device
+            }
+        }
+        return AVCaptureDevice.default(for: AVMediaType.audio )!
+    }
+   
+    func captureOutput(_ output: AVCaptureOutput, didOutput: CMSampleBuffer, from connection: AVCaptureConnection){
+        var block_buffer : CMBlockBuffer?
+        var audioBufferList = AudioBufferList()
+        
+        CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(didOutput, nil, &audioBufferList, MemoryLayout<AudioBufferList>.size, nil, nil, 0, &block_buffer)
+        
+        let buffers = UnsafeBufferPointer<AudioBuffer>(start: &audioBufferList.mBuffers, count: Int(audioBufferList.mNumberBuffers))
+        
+        for audioBuffer in buffers {
+            let frame = audioBuffer.mData?.assumingMemoryBound(to: UInt8.self)
+            if ( audio_data.count == 0 ) {
+//NOTUSINGREALPTS                let pts = CMSampleBufferGetOutputPresentationTimeStamp( didOutput )
+//NOTUSINGREALPTS                audio_pts = Double( pts.value ) / Double( pts.timescale )
+            }
+            audio_data.append(frame!, count: Int(audioBuffer.mDataByteSize))
+        }
     }
 
     func isrunning() -> Bool {
@@ -110,15 +136,39 @@ class MirrorStream {
             }
         }
         
-        if ( output!.tryAccept( initial_data: buffer ) ) {
+        if ( output.tryAccept( initial_data: buffer ) ) {
             m_encoder?.requestIFrame()
         }
         
-        return output!.write( data: data )
+        return output.write( data: data )
     }
         
     @objc func run() {
-    
+        
+        var device_input : AVCaptureDeviceInput?
+        var device_output : AVCaptureAudioDataOutput?
+        
+        do {
+            device_input = try AVCaptureDeviceInput( device: getAudioDevice() )
+            if ( audio_capture_session.canAddInput( device_input! ) ) {
+                audio_capture_session.addInput( device_input! )
+            } else {
+                print("cannot add input")
+            }
+        
+            device_output = AVCaptureAudioDataOutput()
+            device_output?.setSampleBufferDelegate( self, queue: audio_dispatch_queue )
+            if ( audio_capture_session.canAddOutput( device_output! ) ) {
+                audio_capture_session.addOutput( device_output! )
+            } else {
+                print("cannot add output")
+            }
+        } catch {
+            print("soemthing bad in audio setup" )
+        }
+
+        audio_capture_session.startRunning()
+        
         buffer.removeAll()
         capture_header = true
         
@@ -176,6 +226,16 @@ class MirrorStream {
             let d : CFData = (image.dataProvider?.data)!
             m_encoder?.input(image: d as Data )
             
+            audio_dispatch_queue.sync {
+                
+                audio_written = audio_written + Int64( audio_data.count )
+                /* 48k 16bit stereo -- 192000 bytes per second */
+                fake_audio_pts = ( audio_written * 90 ) / 192
+                
+                m_encoder?.inputAudio( data: audio_data, pts: fake_audio_pts )
+                audio_data.removeAll()
+            }
+            
             var fps = 0
             fps = (m_encoder?.fps())!
             if ( fps != old_fps ) {
@@ -183,7 +243,23 @@ class MirrorStream {
                 old_fps = fps
             }
         }
+        
+        audio_capture_session.stopRunning()
+        audio_capture_session = AVCaptureSession()
+
         has_stopped = true
     }
     
 }
+
+/*
+ 
+ 
+ print("Running audio....")
+ session.startRunning()
+ 
+ }
+ 
+ */
+
+

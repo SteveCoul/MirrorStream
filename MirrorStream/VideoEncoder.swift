@@ -171,6 +171,9 @@ class VideoEncoder {
         sws_scale( sws_ctx!, s_data, s_len, Int32(0), Int32(m_height), d_data, d_len )
     }
 
+    func inputAudio( data: Data, pts: Int64 ) {
+    }
+    
     func input( image: Data ) -> Void {
         var frame : UnsafeMutablePointer<AVFrame>?
         
